@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LiveBR.Application.ViewModels;
@@ -7,8 +8,9 @@ namespace LiveBR.Domain.Services
 {
     public interface IUserService
     {
-        public Task AddUser(CreateUserDTO userDto);
+        public Task AddUser(CreateUserDto userDto);
 
-        public Task<IList<CreateUserDTOResponse>> Users();
+        public Task<IList<CreateUserDtoResponse>> Users();
+        public Task<CreateUserDtoResponse> GetById(Guid id);
     }
 }

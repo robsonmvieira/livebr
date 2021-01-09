@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace LiveBR.API.Controllers
 {
     [ApiController]
-    public abstract class MainController: ControllerBase
+    public abstract class MainController: Controller
     {
-        public ICollection<string> Errors { get; set; } = new List<string>();
+        protected ICollection<string> Errors = new List<string>();
+        
         protected ActionResult CustomResponse(object result = null)
         {
             if (IsValidOperation()) return Ok(result);
@@ -19,7 +20,7 @@ namespace LiveBR.API.Controllers
             }));
         }
 
-        public IActionResult CustomResponse(ModelStateDictionary modelState)
+        protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             var erros = modelState.Values.SelectMany(x => x.Errors);
 
@@ -31,12 +32,12 @@ namespace LiveBR.API.Controllers
             return CustomResponse();
         }
 
-        protected bool IsValidOperation()
+        private bool IsValidOperation()
         {
             return !Errors.Any();
         }
 
-        protected void AddError(string error)
+        private void AddError(string error)
         {
             Errors.Add(error);
         }

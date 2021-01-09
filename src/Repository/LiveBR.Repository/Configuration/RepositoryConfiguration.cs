@@ -10,16 +10,15 @@ namespace LiveBR.Repository.Configuration
 {
     public static class RepositoryConfiguration
     {
-        public static void AddRepositoryDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        public static void AddRepositoryDependencyInjection(this IServiceCollection services, string connection)
         {
             services.AddDbContext<LiveBrContext>(opt =>
             {
-                opt.UseSqlServer(configuration.GetConnectionString("DefaultConnecion"));
+                opt.UseSqlServer(connection);
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<LiveBrContext>();
-            services.AddScoped<IUnitOfWork>();
         } 
     }
 }

@@ -13,13 +13,14 @@ namespace LiveBR.Repository.Repository
     {
         private readonly LiveBrContext _liveBrContext;
         private readonly DbSet<TEntity> Query;
+        private IUnitOfWork _unitOfWork => _liveBrContext;
 
         public Repository(LiveBrContext liveBrContext)
         {
             _liveBrContext = liveBrContext;
             Query = _liveBrContext.Set<TEntity>();
         }
-        private IUnitOfWork _unitOfWork => _unitOfWork;
+       
         public async Task Add(TEntity entity)
         {
             await Query.AddAsync(entity);
@@ -28,7 +29,7 @@ namespace LiveBR.Repository.Repository
 
         public async Task<IEnumerable<TEntity>> ListAll()
         {
-            return await Query.AsNoTracking().ToArrayAsync();
+            return await Query.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity> FindById(Guid id)

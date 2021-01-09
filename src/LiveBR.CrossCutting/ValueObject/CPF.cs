@@ -12,7 +12,7 @@ namespace LiveBR.CrossCutting.ValueObject
         public CPF(string value)
         {
             value = ValueToString(value);
-            if (!IsValid(value)) throw new DomainExpection("Cpf inváldido");
+            if (!IsValid(value)) throw new DomainExpection("Cpf inválido");
             Value = value;
         }
 

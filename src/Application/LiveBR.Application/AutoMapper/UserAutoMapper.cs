@@ -8,31 +8,37 @@ namespace LiveBR.Application.AutoMapper
     {
         public UserAutoMapper()
         {
-            CreateMap<CreateUserDTO, User>()
-                .ForMember(dst =>
+
+            CreateMap<CreateUserDto, User>()
+                .ForPath(dst =>
                     dst.Name, map =>
                     map.MapFrom(dto => dto.Name))
-                .ForMember(dst =>
+                .ForPath(dst =>
                     dst.Email.Value, dto =>
                     dto.MapFrom(cud => cud.Email))
-                .ForMember(dst =>
+                .ForPath(dst =>
                     dst.Cpf.Value, dto =>
                     dto.MapFrom(cud =>
-                        cud.CPF));
+                        cud.Cpf))
+                .ForPath(dst =>
+                    dst.Password.Value, cud =>
+                    cud.MapFrom(x => x.Password));
 
-            CreateMap<User, CreateUserDTOResponse>()
-                .ForMember(dst =>
+            CreateMap<User, CreateUserDtoResponse>()
+                .ForPath(dst =>
                     dst.Id, font =>
                     font.MapFrom(obj => obj.Id))
-                .ForMember(dst =>
+                .ForPath(dst =>
                     dst.Name, font =>
                     font.MapFrom(obj => obj.Name))
-                .ForMember(dst =>
+                .ForPath(dst =>
                     dst.Email, font =>
                     font.MapFrom(obj => obj.Email.Value))
-                .ForMember(dst => dst.CPF,
+                .ForPath(dst => dst.Cpf,
                     font =>
                         font.MapFrom(user => user.Cpf.Value));
+
+
 
         }
     }
