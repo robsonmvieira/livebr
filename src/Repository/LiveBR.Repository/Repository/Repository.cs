@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LiveBR.CrossCutting.Interfaces;
 using LiveBR.Domain.Entities;
@@ -47,6 +49,16 @@ namespace LiveBR.Repository.Repository
         {
             Query.Remove(entity);
             await _unitOfWork.Commit();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetListByExpression(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Task.FromResult(Query.Where(expression).AsEnumerable());
+        }
+
+        public async Task<TEntity> GetByExpression(Expression<Func<TEntity, bool>> expression)
+        {
+            return await Query.Where(expression).FirstOrDefaultAsync();
         }
     }
 }

@@ -1,15 +1,18 @@
+using BC = BCrypt.Net.BCrypt;
 namespace LiveBR.CrossCutting.Utils.EncoderPassword
 {
     public class EncoderPassword: IEncoderPassword
     {
-        public string HashPassword(string plainPassword)
+        public string HashPassword(string plainPassword, int salt, bool value)
         {
-            return BCrypt.Net.BCrypt.HashPassword(plainPassword);
+            return BC.HashPassword(plainPassword, salt, value);
         }
 
         public bool VerifyPassword(string plainPassword, string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.Verify(plainPassword, hashedPassword);
+            var isMatch = BC.Verify(plainPassword, hashedPassword);
+
+            return isMatch;
         }
     }
 }

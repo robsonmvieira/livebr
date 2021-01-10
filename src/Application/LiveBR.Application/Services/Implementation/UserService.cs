@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using LiveBR.Application.ViewModels;
@@ -26,7 +27,8 @@ namespace LiveBR.Application.Services.Implementation
         public async Task AddUser(CreateUserDto userDto)
         {
             var user = _mapper.Map<User>(userDto);
-            var hashedPassword = _encoderPassword.HashPassword(user.Password.Value);
+            
+            var hashedPassword = _encoderPassword.HashPassword(user.Password.Value, 12, false);
             user.ChangePassword(hashedPassword);
             
             user.IsValidUser();
@@ -40,11 +42,36 @@ namespace LiveBR.Application.Services.Implementation
             return list;
         }
 
-        public async Task<CreateUserDtoResponse> GetById(Guid id)
+        public async Task<User> GetById(Guid id)
         {
             if (id == Guid.Empty) throw new DomainExpection("O Id não pode ser vazio");
-            var result =  await _userRepository.FindById(id);
-            return _mapper.Map<CreateUserDtoResponse>(result);
+            return await _userRepository.FindById(id);
+            // return _mapper.Map<CreateUserDtoResponse>(result);
+        }
+
+        public async Task<IEnumerable<CreateUserDtoResponse>> GetUsersByExpression(Expression<Func<User, bool>> expression)
+        {
+            var response = await _userRepository.GetListByExpression(expression);
+            var result = _mapper.Map<IList<CreateUserDtoResponse>>(response);
+            return result;
+        }
+
+        public async Task<CreateUserDtoResponse> GetUserByExpression(Expression<Func<User, bool>> expression)
+        {
+            var response = await _userRepository.GetByExpression(expression);
+            var result = _mapper.Map<CreateUserDtoResponse>(response);
+            return result;
+        }
+
+        public async Task<User> FindUserByEmail(Expression<Func<User, bool>> expression)
+        {
+            var response = await _userRepository.GetByExpression(expression);
+            return response;
+        }
+
+        public async Task RemoveUser(User user)
+        {
+            await _userRepository.Remove(user);
         }
     }
 }

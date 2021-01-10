@@ -4,6 +4,7 @@ using AutoMapper;
 using LiveBR.API.ViewModels;
 using LiveBR.Application.ViewModels;
 using LiveBR.Domain.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace LiveBR.API.Controllers
         }
             
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> ListUsers()
         {
             var result = await _userService.Users();
@@ -36,6 +38,7 @@ namespace LiveBR.API.Controllers
             return Ok(user);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -45,6 +48,23 @@ namespace LiveBR.API.Controllers
             
             var user = _mapper.Map<CreateUserDto>(request); 
             await _userService.AddUser(user);
+            return CustomResponse();
+        }
+        
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> RemoveUser(Guid id)
+        {
+            var userExists = await _userService.GetById(id);
+
+            if (userExists == null)
+            {
+                AddError("Usuário não encontrado");
+                return CustomResponse();
+            }
+
+            await _userService.RemoveUser(userExists);
             return CustomResponse();
         }
     }

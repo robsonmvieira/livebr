@@ -32,12 +32,12 @@ namespace LiveBR.API.Controllers
             return CustomResponse();
         }
 
-        private bool IsValidOperation()
+        protected bool IsValidOperation()
         {
             return !Errors.Any();
         }
 
-        private void AddError(string error)
+        protected void AddError(string error)
         {
             Errors.Add(error);
         }
